@@ -1,0 +1,30 @@
+{
+  "name": "asi2nodejs",
+  "version": "1.0.0",
+  "description": "Partie nodejs du projet ASI2",
+  "main": "app.js",
+  "scripts": {
+    "test": "node tesContentModel.js",
+    "start": "node app.js"
+  },
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Projets5A/nodejsASI2.git"
+  },
+  "author": "ThibAbdel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Projets5A/nodejsASI2/issues"
+  },
+  "homepage": "https://github.com/Projets5A/nodejsASI2#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "4.16.4"
+  },
+  "devDependencies": {
+    "eslint": "^5.7.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0"
+  }
+}
