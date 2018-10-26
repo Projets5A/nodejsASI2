@@ -6,7 +6,7 @@ process.env.CONFIG = JSON.stringify(CONFIG);
 var utils = require("./app/utils/utils.js");
 var ContentModel = require("./app/models/content.model.js");
 
-var content = new ContentModel();
+var content = new ContentModel({});
 
 content.id = utils.generateUUID();
 content.type = "myType";
@@ -90,6 +90,7 @@ function testUpdate(content) {
 	content.title = "MOD_title";
 	var newData = content.getData() + " YES,  IT IS !!!"
 	content.setData(newData);
+	console.log(content.getData());
 
 	return new Promise((resolve, reject) => {
 		ContentModel.update(content, function(err) {
@@ -97,7 +98,6 @@ function testUpdate(content) {
 				console.error(err);
 				return reject(err);
 			}
-			console.dir(content);
 
 			utils.readFileIfExists(utils.getDataFilePath(content.fileName), function(err, data) {
 				if (!!err) {
@@ -142,14 +142,13 @@ function testErr(content) {
 
 	return testCreate(12)
 		.then(console.log, function(err) {
-			logError(err);
-
+			logError(err + "error create !!!!!!!!!!!");
 			content.id = null;
 			return content;
 		})
 		.then(testCreate)
 		.then(console.log, function(err) {
-			logError(err);
+			logError(err + "error create !!!!!!!!!!!");
 			return content;
 		})
 		.then(testRead)

@@ -8,33 +8,40 @@ const router = express.Router();
 const config = JSON.parse(process.env.CONFIG);
 
 router.route('/loadPres').get((req, res) => {
+
+  function readfiles(filesname) {
+    const objectPres = {};
+    filesname.forEach((filename) => {
+      fs.readFile(`${config.presentationDirectory}/${filename}`, (error, file) => {
+        if (error) {
+          res.status(500).send(`Error server side: ${error.message}`);
+          return console.error(error);
+        }
+        const fileParsed = JSON.parse(file);
+        if (fileParsed.id) {
+          objectPres[fileParsed.id] = fileParsed;
+        } else {
+          console.log(`Error : Enable to find the id of the file ${file} in directory presentation`);
+        }
+        if (Object.keys(objectPres).length === filesname.length) {
+          res.status(200).send(objectPres);
+        }
+      });
+    });
+  }
+
   fs.readdir(config.presentationDirectory, (err, files) => {
     if (err) {
-      res.status(500).send(`Error server side: ${err}`);
-      return console.log('Erreur durant la lecture des du dossier configuration');
+      res.status(500).send(`Error server side: ${err.message}`);
+      return console.error(err);
     }
-    const objectPres = {};
-    let fileParsed;
-    let compteurFiles = 0;
-    files.forEach((fileName) => {
-      if (path.extname(fileName) === '.json') {
-        fs.readFile(`${config.presentationDirectory}/${fileName}`, (error, file) => {
-          compteurFiles += 1;
-          if (error) {
-            return console.log(`Erreur durant la lecture des fichiers de configuration de présentation : ${err}`);
-          }
-          fileParsed = JSON.parse(file);
-          if (fileParsed.id) {
-            objectPres[fileParsed.id] = fileParsed;
-          } else {
-            console.log(`Error : Enable to find the id of the file ${fileName} in directory presentation`);
-          }
-          if (compteurFiles === files.length) {
-            res.status(200).send(objectPres);
-          }
-        });
+    const jsonfiles = [];
+    for (let i = 0; i < files.length; i += 1) {
+      if (path.extname(files[i]) === '.json') {
+        jsonfiles.push(files[i]);
       }
-    });
+    }
+    readfiles(jsonfiles);
   });
 });
 
