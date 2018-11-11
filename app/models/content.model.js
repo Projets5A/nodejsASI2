@@ -14,19 +14,15 @@ class ContentModel {
   }
 
   static create(content, callback) {
-    let compteur = 0;
-    if (content && content.id && content.fileName) {
-      fs.writeFile(utils.getDataFilePath(content.fileName), content.getData(), (err) => {
-        if (err) { return callback(err); }
-        compteur += 1;
-        if (compteur === 2) {
-          return callback();
-        }
-      });
+    if (content && content.id) {
       fs.writeFile(utils.getMetaFilePath(content.id), JSON.stringify(content), (error) => {
         if (error) { return callback(error); }
-        compteur += 1;
-        if (compteur === 2) {
+        if (content.type !== "video" && content.type !== "img_url" && content.type !== "web") {
+          fs.writeFile(utils.getDataFilePath(content.fileName), content.getData(), (err) => {
+            if (err) { return callback(err); }
+            return callback();
+          });
+        } else {
           return callback();
         }
       });
